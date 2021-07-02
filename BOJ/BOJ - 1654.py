@@ -17,5 +17,4 @@ while start <= end :
         start = mid + 1  # 더 길게 자를 수도 있으니까
     else :
         end = mid - 1  # 더 짧게 잘라야 하니까
-    # 소주뚜껑 숫자맞추기 절반부터 부르는 원리
 print(end)

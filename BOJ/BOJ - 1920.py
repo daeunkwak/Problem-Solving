@@ -9,8 +9,8 @@ N_list.sort()
 
 M = int(input())
 M_list = list(map(int, input().split()))
-# start, end, mid 변수를 사용해서 좀 더 직관적으로 짜야할듯
-# 인덱스를 start, end, mid로 설정해서 N_list[mid] 이런식으로 넣어야 한다!!!
+# start, end, mid 변수를 사용
+# 인덱스를 start, end, mid로 설정 -> N_list[mid] 이렇게
 
 start = 0
 end = N - 1
