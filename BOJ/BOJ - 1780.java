@@ -1,5 +1,11 @@
+/**
+ author : Kwak Daeun
+ github : https://github.com/daeunkwak
+ title : 종이의 개수
+ description : 분할 정복, 재귀
+ */
 import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.IOException;ㄴ
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
