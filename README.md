@@ -4,3 +4,5 @@
 
 ## Contents
 - [순열, 조합, 부분집합](https://github.com/daeunkwak/Problem-Solving/issues/1)
+- [자료구조](https://github.com/daeunkwak/Problem-Solving/issues/3)
+- [DFS, BFS](https://github.com/daeunkwak/Problem-Solving/issues/2)
