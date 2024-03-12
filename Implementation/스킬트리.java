@@ -8,6 +8,7 @@ import java.lang.*;
 
 class Solution {
     public int solution(String skill, String[] skill_trees) {
+
         int answer = skill_trees.length;
         char[] charArray;
         int cnt = 0;
