@@ -36,7 +36,7 @@ class Solution {
                 }
             }
         }
-
+        Arrays.sort()
 
         return answer;
     }
