@@ -17,7 +17,6 @@ class Solution {
         for(int i = 0; i < skill_trees.length; i++){
             charArray = skill_trees[i].toCharArray();
             cnt = 0;
-
             for(int j = 0; j < charArray.length; j++){
 
                 if(skill.contains(String.valueOf(charArray[j]))){
@@ -36,8 +35,6 @@ class Solution {
                 }
             }
         }
-        Arrays.sort()
-
         return answer;
     }
 }
