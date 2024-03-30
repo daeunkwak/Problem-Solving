@@ -1,3 +1,9 @@
+"""
+author : https://github.com/daeunkwak
+date : 2024-03-27
+title : 단어 변환
+"""
+
 import java.util.*;
 
 class Solution {

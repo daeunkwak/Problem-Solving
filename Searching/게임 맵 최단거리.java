@@ -1,3 +1,9 @@
+"""
+author : https://github.com/daeunkwak
+date : 2024-03-27
+title : 게임 맵 최단거리
+"""
+
 import java.util.*;
 
 class Solution {
