@@ -18,11 +18,13 @@ class Solution {
             }
         }
 
+        // 승패관계 그래프에 넣기
         for(int i = 0; i < results.length; i++){
             graph[results[i][0] - 1][results[i][1] - 1] = 'W';
             graph[results[i][1] - 1][results[i][0] - 1] = 'L';
         }
 
+        // 1은 2를 이긴다 -> 2는 3, 4를 이긴다 -> 1은 3, 4도 이긴다
         while(true){
             int flag = 0;     // 업데이트 여부 확인 변수
             for(int i = 0; i < n; i++){
@@ -31,7 +33,7 @@ class Solution {
 
                     // ex) 1은 2를 이긴다
                     if(graph[i][j] != '0'){
-                        char res = graph[i][j];
+                        char res = graph[i][j]; // W
 
                         // 2는 ??를 이긴다
                         List<Integer> wins = new ArrayList<>();
@@ -43,7 +45,7 @@ class Solution {
 
                         // 따라서 1은 ??를 이긴다
                         for(int k : wins){
-                            if(graph[i][k] != res){
+                            if(graph[i][k] != res){ // W, L 중 일치하는 결과만 저장
                                 graph[i][k] = res;
                                 flag = 1;
                             }
@@ -52,6 +54,7 @@ class Solution {
                     }
                 }
             }
+            // 더이상 업데이트할 승패관계가 없을 경우 종료
             if(flag == 0){
                 break;
             }
@@ -71,4 +74,7 @@ class Solution {
 
         return answer;
     }
+
+    // 0 W W L
+    // W 0 W L
 }
