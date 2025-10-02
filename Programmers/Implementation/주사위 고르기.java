@@ -2,116 +2,117 @@ import java.util.*;
 
 /**
  * title : 주사위 고르기
- * date : 2025-03-07
+ * date : 2025-10-01
  */
-
 class Solution {
-    int n = 0;
-    List<int[]> combinations;
-
+    static int n;
+    static List<int[]> diceCombs;
+    static List<Integer> sumA;
+    static List<Integer> sumB;
     public int[] solution(int[][] dice) {
-        int[] answer = null;
         n = dice.length;
-        combinations = new ArrayList<>();
+        diceCombs = new ArrayList<>();  // 주사위 조합 저장
 
-        // n/2개 선택 조합
-        getCombinations(dice, new int[n/2], 0, 0);
+        // A, B 주사위 n/2개씩 > 주사위 모두 굴리기 > 나온 수 모두 합해 점수 계산
+        // A가 이길 확률이 가장 높은 주사위 조합 오름차순으로 return
 
-        // A, B 시뮬레이션
+        // [1] 주사위 n/2개 선택 조합 구하기 - A, B 각각 저장
+        // for (int i = 1; i <= n; i++) {
+        //     int[] comb = new int[n / 2];
+        //     combDice(i, 0, comb);
+        // }
+        int[] comb = new int[n / 2];
+        combDice(1, 0, comb);
+        // System.out.println("Total combinations: " + diceCombs.size());
+
+        // [2] 직접 굴려보면서 A의 합이 더 큰 경우 count > 조합마다 값 갱신하기
         int maxWinCnt = 0;
-        for (int[] combA : combinations) {
-            int[] combB = getCombB(combA);
+        int[] maxWinComb = new int[n / 2];
+        for (int[] diceA : diceCombs) {
+            int[] diceB = new int[n / 2];
 
-            List<Integer> arrA = new ArrayList<>();
-            List<Integer> arrB = new ArrayList<>();
+            int idxA = 0;
+            int idxB = 0;
 
-            // n/2개 주사위 던져서 나오는 합 모두 구하기
-            getCalculate(dice, arrA, combA, 0, 0);
-            getCalculate(dice, arrB, combB, 0, 0);
-
-            // 이분탐색으로 A가 이기는 횟수 구하기
-            // 정렬 까먹지마
-            Collections.sort(arrB);
-
-            // A가 이기는 횟수 구하ㄱ긱
-            int winCnt = getWinCntOfA(arrA, arrB);
-            if (maxWinCnt < winCnt) {
-                maxWinCnt = winCnt;
-                answer = combA;
-            }
-
-        }
-
-        // 주사위는 1번부터 시작하까 1씩 더해야함
-        Arrays.sort(answer);
-        for (int i = 0; i < answer.length; i++) {
-            answer[i] += 1;
-        }
-
-        return answer;
-    }
-
-    private void getCombinations(int[][] dice, int[] current, int count, int idx) {
-        if (count == n/2) {
-            combinations.add(current.clone());
-            return;
-        }
-
-        for (int i = idx; i < n; i++) {
-            current[count] = i;
-            getCombinations(dice, current, count + 1, i + 1);
-        }
-    }
-
-    private int[] getCombB(int[] combA) {
-        int[] combB = new int[n/2];
-        int idx = 0;
-        for (int i = 0; i < n; i++) {
-            boolean flag = false;
-            for (int k : combA) {
-                if (i == k) {
-                    flag = true;
+            // 남은 주사위로 B 채우기
+            for (int i = 1; i <= n; i++) {
+                // **** 인덱스 초과조건 확인
+                if (idxA < n / 2 && diceA[idxA] == i) {
+                    idxA++;
+                }
+                else {
+                    diceB[idxB] = i;
+                    idxB++;
                 }
             }
-            if (!flag) {
-                combB[idx] = i;
-                idx++;
+
+            // A, B 각각 주사위 굴려보기
+            sumA = new ArrayList<>();
+            sumB = new ArrayList<>();
+            rollDice(dice, diceA, 0, 0, sumA);
+            rollDice(dice, diceB, 0, 0, sumB);
+
+            // 이분탐색 > A가 이기는 횟수 count
+            Collections.sort(sumA);
+            Collections.sort(sumB);
+
+            int winCnt = 0;
+            for (int sum : sumA) {
+                winCnt += binarySearch(sum);
+            }
+
+            // 최대 조합 갱신
+            if (maxWinCnt < winCnt) {
+                maxWinCnt = winCnt;
+                maxWinComb = diceA;
             }
         }
 
-        return combB;
+        return maxWinComb;
     }
 
-    private void getCalculate(int[][] dice, List<Integer> arr, int[] comb, int count, int sum) {
-        if (count == n/2) {
-            arr.add(sum);
+    public int binarySearch(int sum) {
+        int start = 0;
+        //int end = sumB.size() - 1;
+        int end = sumB.size();
+
+        while (start < end) {
+            int mid = (start + end) / 2;
+
+            if (sumB.get(mid) < sum) {  // 더 이길 수 있음
+                start = mid + 1;
+            } else {    // mid를 더 앞으로 탐색해야함
+                // end = mid - 1;
+                end = mid;
+            }
+        }
+
+        return start;
+    }
+
+    public void rollDice(int[][] dice, int[] comb, int diceIdx, int sum, List<Integer> list) {
+        if (diceIdx == n / 2) {
+            list.add(sum);
             return;
         }
 
         for (int i = 0; i < 6; i++) {
-            getCalculate(dice, arr, comb, count + 1, sum + dice[comb[count]][i]);
+            rollDice(dice, comb, diceIdx + 1, sum + dice[comb[diceIdx] - 1][i], list);
         }
     }
 
-    private int getWinCntOfA(List<Integer> aScores, List<Integer> bScores) {
-        int winCnt = 0;
-        // a를 기준으로 for문을 돌리고
-        // b배열의 어디까지 이길 수 있는지를 이분탐색으로 찾으면 된다!
-        for (int s : aScores) {
-            int start = 0;
-            // 그래서 end를 이렇게 설정해야 하는 것
-            int end = bScores.size() - 1;
-            while (start <= end) {
-                int mid = (start + end) / 2;
+    public void combDice(int dice, int size, int[] cur) {
+        // if (dice > n) return;
 
-                if (s > bScores.get(mid)) {
-                    start = mid + 1;
-                } else {
-                    end = mid - 1;
-                }
-            }
-            winCnt += start;
+        if (size == n / 2) {
+            diceCombs.add(cur.clone());
+            return;
         }
-        return winCnt;
+
+        if (dice > n) return;
+
+        cur[size] = dice;
+        combDice(dice + 1, size + 1, cur);
+        combDice(dice + 1, size, cur);
     }
 }
